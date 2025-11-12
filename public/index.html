@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>미술관 3D 프로젝트</title>
+    <link rel = "stylesheet" href="public/style.css">
+
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <div id ="info-box">
+        <h3>안경 부품</h3>
+        <p id ="info-text">부품에 대한 설명</p>
+        
+    </div>
+
+    <div id = "remote-control">
+        <button id="btn-up">1</button>
+        <button id="btn-down">2</button>
+        <button id="btn-left">3</button>
+        <button id="btn-right">4</button>
+        <button id="btn-zoom-in">5</button>
+        <button id="btn-zoom-out">6</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.137.5/three.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/STLLoader.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/controls/OrbitControls.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
+    <script src="main.js"></script>
+</body>
+</html>
