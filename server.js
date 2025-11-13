@@ -1,39 +1,35 @@
-//server.js
-const http = require('http');
-const fs = require('fs');
-const path = require('path'); 
-const port = 3000;
+// server.js
+import express from 'express';
+import favicon from 'serve-favicon';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const server = http.createServer((req, res) => {
-    
-    let filePath = req.url === '/' ? '/index.html' : req.url;
+const app = express();
+const PORT = 3000;
 
-    let fullPath = path.join(__dirname, 'public', filePath);
+// __dirname 대체 (ES 모듈 환경에서 필요)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-    let ext = path.extname(fullPath);
-    let contentType = 'text/html';
 
-    switch (ext) {
-        case '.js': contentType = 'text/javascript'; break;
-        case '.css': contentType = 'text/css'; break;
-        case '.stl': contentType = 'model/stl'; break;
-        case '.json': contentType = 'text/json'; break;
-        case '.png': contentType = 'image/png'; break;
-        case '.jpg': contentType = 'image/jpg'; break;  
-    }
 
-    fs.readFile(fullPath, (err, data) => { // 이 fullPath가 올바르게 만들어져야 합니다.
-        if (err) {
-            console.error(`파일을 찾을 수 없음: ${fullPath}`); 
-            res.writeHead(404);
-            res.end('Error: 404 - File Not Found');
-        } else {
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.end(data);
-        }
-    });
+// ✅ .obj 파일 Content-Type 지정 (Three.js에서 필요)
+app.use((req, res, next) => {
+  if (req.url.endsWith('.obj')) {
+    res.setHeader('Content-Type', 'model/obj');
+  }
+  next();
 });
 
-server.listen(port, () => {
-    console.log(`Node.js 서버가 http://localhost:${port} 에서 실행 중입니다.`);
+// ✅ 정적 파일 서빙 (index.html, style.css, js, models 등)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ✅ 기본 라우팅 — http://localhost:3000
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// ✅ 서버 실행
+app.listen(PORT, () => {
+  console.log(`🚀 Express 서버 실행 중: http://localhost:${PORT}`);
 });
