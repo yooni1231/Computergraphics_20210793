@@ -1,12 +1,13 @@
 // disassembleMode.js
 import * as THREE from 'three';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import TWEEN from '@tweenjs/tween.js';
 
 export function initDisassembleMode(containerId) {
     const container = document.getElementById(containerId);
 
+    // ----- 기본 세팅 -----
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f0f0);
 
@@ -17,49 +18,90 @@ export function initDisassembleMode(containerId) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
+    // ----- 조명 -----
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
     dirLight.position.set(5, 5, 5);
     scene.add(ambientLight, dirLight);
 
+    // ----- 카메라 컨트롤 -----
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
 
-    const loader = new STLLoader();
-    const material = new THREE.MeshStandardMaterial({ color: 0x606060, metalness: 0.2, roughness: 0.4 });
+    // ----- 재질 -----
+    const baseMaterial = new THREE.MeshStandardMaterial({
+        color: 0x666666,
+        metalness: 0.3,
+        roughness: 0.6,
+    });
 
-    const parts = {};
+    // ----- OBJ 로드 -----
+    const loader = new OBJLoader();
+    loader.load(
+        'models/glasses_total.obj',
+        (object) => {
+            const parts = [];
 
-    const loadPart = (name, path, position) => {
-        loader.load(path, (geometry) => {
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.scale.set(0.01, 0.01, 0.01);
-            mesh.position.set(0, 0, 0);
-            scene.add(mesh);
-            parts[name] = mesh;
+            // 각 부품 탐색
+            object.traverse((child) => {
+                if (child.isMesh) {
+                    child.material = baseMaterial.clone();
+                    child.material.color.setHSL(Math.random(), 0.4, 0.6); // 각 부품 색 다르게
+                    child.scale.set(0.01, 0.01, 0.01);
 
-            // 애니메이션 (중심 → 지정 위치)
-            new TWEEN.Tween(mesh.position)
-                .to(position, 2000)
-                .easing(TWEEN.Easing.Quadratic.Out)
-                .start();
+                    // 초기 위치 중심
+                    child.position.set(0, 0, 0);
+                    scene.add(child);
+                    parts.push(child);
+                }
+            });
 
-            new TWEEN.Tween(mesh.rotation)
-                .to({ x: Math.random() * Math.PI, y: Math.random() * Math.PI, z: Math.random() * Math.PI }, 2500)
-                .easing(TWEEN.Easing.Quadratic.Out)
-                .start();
+            // 각 부품에 분리 애니메이션 적용
+            parts.forEach((part, i) => {
+                // 분리 방향 (랜덤 or 균일한 방향 벡터)
+                const angle = (i / parts.length) * Math.PI * 2;
+                const distance = 2.0 + Math.random() * 0.5;
+                const targetPos = {
+                    x: Math.cos(angle) * distance,
+                    y: (Math.random() - 0.5) * 2.0,
+                    z: Math.sin(angle) * distance,
+                };
 
-            // 라벨
-            createLabel(name, mesh);
-        });
-    };
+                // 이동 애니메이션
+                new TWEEN.Tween(part.position)
+                    .to(targetPos, 2500)
+                    .easing(TWEEN.Easing.Quadratic.Out)
+                    .delay(i * 150) // 약간씩 시차를 줌
+                    .start();
 
-    // 부품 로드
-    loadPart('glasses', 'public/models/glasses.stl', { x: -1.5, y: 0, z: 0 });
-    loadPart('camera_front', 'public/models/camera_front.stl', { x: 0, y: 1.5, z: 0 });
-    loadPart('camera_back', 'public/models/camera_back.stl', { x: 1.5, y: 0, z: 0 });
-    loadPart('nano', 'public/models/nano.stl', { x: 0, y: -1.5, z: 0 });
+                // 회전 애니메이션
+                new TWEEN.Tween(part.rotation)
+                    .to(
+                        {
+                            x: Math.random() * Math.PI,
+                            y: Math.random() * Math.PI,
+                            z: Math.random() * Math.PI,
+                        },
+                        3000
+                    )
+                    .easing(TWEEN.Easing.Quadratic.Out)
+                    .delay(i * 150)
+                    .start();
 
+                // 라벨 추가
+                createLabel(part.name || `part_${i + 1}`, part);
+            });
+        },
+        (xhr) => {
+            console.log(`Loading: ${(xhr.loaded / xhr.total) * 100}%`);
+        },
+        (error) => {
+            console.error('OBJ 로드 실패:', error);
+        }
+    );
+
+    // ----- 라벨 생성 함수 -----
     function createLabel(text, mesh) {
         const div = document.createElement('div');
         div.className = 'label';
@@ -67,9 +109,10 @@ export function initDisassembleMode(containerId) {
         div.style.position = 'absolute';
         div.style.color = '#111';
         div.style.fontWeight = 'bold';
-        div.style.background = 'rgba(255,255,255,0.7)';
-        div.style.padding = '2px 6px';
+        div.style.background = 'rgba(255,255,255,0.8)';
+        div.style.padding = '3px 8px';
         div.style.borderRadius = '6px';
+        div.style.fontSize = '13px';
         container.appendChild(div);
 
         const vector = new THREE.Vector3();
@@ -89,6 +132,7 @@ export function initDisassembleMode(containerId) {
         animateLabel();
     }
 
+    // ----- 애니메이션 루프 -----
     function animate() {
         requestAnimationFrame(animate);
         TWEEN.update();
@@ -96,4 +140,11 @@ export function initDisassembleMode(containerId) {
         renderer.render(scene, camera);
     }
     animate();
+
+    // ----- 반응형 -----
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
 }
