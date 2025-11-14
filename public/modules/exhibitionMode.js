@@ -29,7 +29,7 @@ window.enableExhibitionMode = function (scene, renderer) {
             }
         },
         (error) => {
-            console.error("" EXR 로딩 실패:", error);
+            console.error(" EXR 로딩 실패:", error);
         }
     );
 
