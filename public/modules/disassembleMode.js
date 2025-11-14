@@ -39,7 +39,7 @@ export function initDisassembleMode(containerId) {
     // ----- OBJ 로드 -----
     const loader = new OBJLoader();
     loader.load(
-        'models/glasses_total.obj',
+        'models/glasses.obj',
         (object) => {
             const parts = [];
 
