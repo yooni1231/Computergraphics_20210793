@@ -1,4 +1,5 @@
 let scene, camera, renderer, controls;
+let glassesObj = null; // OBJ 저장용
 
 init();
 animate();
@@ -56,8 +57,11 @@ function init() {
                     child.receiveShadow = true;
                 }
             });
+
             object.scale.set(0.01, 0.01, 0.01);
             scene.add(object);
+
+            glassesObj = object;
             console.log('✅ OBJ 로드 성공');
         },
         (xhr) => {
@@ -71,38 +75,61 @@ function init() {
     // ----- 창 크기 변경 이벤트 -----
     window.addEventListener('resize', onWindowResize);
 
+    // ----- 더블클릭 이벤트: 안경 숨기기 -----
+    window.addEventListener('dblclick', () => {
+        if (glassesObj) {
+            glassesObj.visible = false;
+            console.log("👓 안경 숨김");
+        }
+    });
+
     // ----- 모드 버튼 이벤트 -----
     document.querySelectorAll('#mode-buttons button').forEach((btn) => {
         btn.addEventListener('click', () => {
             const mode = btn.dataset.mode;
             console.log(`${mode} 모드로 전환`);
 
+            // ---- 모드별 안경 보임/숨김 ----
+            if (glassesObj) {
+                if (mode === 'exhibition') {
+                    glassesObj.visible = true;
+                } else {
+                    glassesObj.visible = false;
+                }
+            }
+
+            // ---- 기존 모드 기능 실행 ----
             switch (mode) {
                 case 'exhibition':
                     if (typeof enableExhibitionMode === 'function') {
                         enableExhibitionMode(scene, renderer, camera, controls);
                     }
                     break;
+
                 case 'assemble':
                     if (typeof assembleMode === 'function') {
                         assembleMode(scene, renderer, camera, controls);
                     }
                     break;
+
                 case 'disassemble':
                     if (typeof disassembleMode === 'function') {
                         disassembleMode(scene, renderer, camera, controls);
                     }
                     break;
+
                 case 'highlight':
                     if (typeof highlightMode === 'function') {
                         highlightMode(scene, renderer, camera, controls);
                     }
                     break;
+
                 case 'ar':
                     if (typeof arMode === 'function') {
                         arMode(scene, renderer, camera, controls);
                     }
                     break;
+
                 default:
                     console.warn('정의되지 않은 모드:', mode);
             }
