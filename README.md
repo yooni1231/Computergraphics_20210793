@@ -1,5 +1,19 @@
 ## 프로젝트 소개
-이 프로젝트는 스마트 아이웨어의 내부 구조 및 작동 원리를 효과적으로 설명하기 위한 웹 기반 인터랙티브 3D 시각화 도구입니다. 단순한 3D 모델 뷰어를 넘어, 사용자가 직접 부품을 분해/조립하고 특정 구성 요소의 기능을 강조하여 볼 수 있는 멀티 모드 구조를 구현하여 기술 이해도와 사용자 몰입도를 극대화했습니다.
+이 프로젝트는 스마트 아이웨어의 내부 구조 및 작동 원리를 효과적으로 설명하기 위한 웹 기반 인터랙티브 3D 시각화 도구입니다. 
+단순한 3D 모델 뷰어를 넘어, 사용자가 직접 부품을 분해/조립하고 특정 구성 요소의 기능을 강조하여 볼 수 있는 멀티 모드 구조를 구현하여 기술 이해도와 사용자 몰입도를 극대화했습니다.
+
+## 프로젝트 페이지
+## 조립 모드 페이지 
+<img width="2000" height="1376" alt="image" src="https://github.com/user-attachments/assets/1964f570-fa2c-4169-8e9c-491b9f0ebf7e" />
+
+## 분해 모드 페이지
+<img width="1261" height="1371" alt="image" src="https://github.com/user-attachments/assets/ebbbb0e8-6a71-476b-a694-6ca42b6111f1" />
+
+
+## 전시 모드 페이지
+<img width="2209" height="1358" alt="image" src="https://github.com/user-attachments/assets/950463fc-9ea5-4f10-af3a-4953154d82f0" />
+## 강조 모드 페이지 
+<img width="1269" height="1369" alt="image" src="https://github.com/user-attachments/assets/6a41a234-dcae-4e3a-8118-3c6d1bf2481e" />
 
 ## 주제 선정 계기
 스마트 아이웨어에 AI 모델이 결합되면서 복잡해진 내부 구성(카메라 모듈, Jetson Nano 등)을 비전공자에게 기존의 문서나 구두 설명 방식으로는 직관적으로 전달하기 어렵다는 문제를 해결하고자 했습니다.
@@ -19,18 +33,25 @@
 사용자에게 깊이 있는 정보를 제공하기 위해 4가지 인터랙티브 모드를 구현했습니다.
 
 모드 이름	기능	핵심 구현 로직
-착용 모드 (Assemble)	전체 외관 확인 및 360도 회전	Three.js OrbitControls, TWEEN을 이용한 부품 통합 복귀 애니메이션
-분해 모드 (Diassemble)	각 부품 위치 및 결합 상태 시각화	TWEEN.js (분리 애니메이션) 완료 후 Cannon.js (물리 시뮬레이션) 전환 및 Raycasting
-강조 모드 (Highlight)	특정 부품의 기능 및 작동 원리 집중 설명	TWEEN을 이용한 선택 부품 중앙 이동/투명도 강조, 나머지 부품 흐리게 처리
-전시 모드 (Exhibition)	제품의 외부 환경 반사 확인	EXRLoader를 사용한 HDRI 기반 IBL 환경 구현, 톤 매핑 Exposure 조절
+착용 모드 (Assemble)	전체 외관 확인 및 360도 회전	
+Three.js OrbitControls, TWEEN을 이용한 부품 통합 복귀 애니메이션
+분해 모드 (Diassemble)	각 부품 위치 및 결합 상태 시각화	
+TWEEN.js (분리 애니메이션) 완료 후 Cannon.js (물리 시뮬레이션) 전환 및 Raycasting
+강조 모드 (Highlight)	특정 부품의 기능 및 작동 원리 집중 설명	
+TWEEN을 이용한 선택 부품 중앙 이동/투명도 강조, 나머지 부품 흐리게 처리
+전시 모드 (Exhibition)	제품의 외부 환경 반사 확인	
+EXRLoader를 사용한 HDRI 기반 IBL 환경 구현, 톤 매핑 Exposure 조절
 
 ## 파일 구조 및 개발 과정
 
 ## 주요 트러블 슈팅 (Trouble Shooting)
-문제	해결	배운 점
-개별 애니메이션 불가 (STL/OBJ)	부품별 개별 STL 파일로 분할 로드하여 물리적 좌표를 계산해 애니메이션에 활용.	glTF/FBX와 같은 계층 구조 포맷의 필요성 인지.
-UMD 라이브러리 통합	UMD 기반 라이브러리(TWEEN.js, Cannon.js)를 window 객체를 통해 접근하도록 명확히 설정.	UMD와 ES Module의 로드 방식 차이 이해.
-모드 전환 시 객체 중복	모드 전환 로직에 이전 모드의 부품 객체 및 물리 엔진 바디를 제거하고 상태를 초기화하는 cleanup 루틴 구현.	복잡한 상태 관리에서 cleanup 함수의 중요성 체감.
+문제	해결과 배운 점
+개별 애니메이션 불가 (STL/OBJ)	부품별 개별 STL 파일로 분할 로드하여 물리적 좌표를 계산해 애니메이션에 활용.	
+glTF/FBX와 같은 계층 구조 포맷의 필요성 인지.
+UMD 라이브러리 통합	UMD 기반 라이브러리(TWEEN.js, Cannon.js)를 window 객체를 통해 접근하도록 명확히 설정.	
+UMD와 ES Module의 로드 방식 차이 이해.
+모드 전환 시 객체 중복	모드 전환 로직에 이전 모드의 부품 객체 및 물리 엔진 바디를 제거하고 상태를 초기화하는 cleanup 루틴 구현.
+복잡한 상태 관리에서 cleanup 함수의 중요성 체감.
 
 ## 결과물 및 시연
 🔗 GitHub Repository
@@ -41,9 +62,9 @@ https://youtu.be/Scf4R2qSGmg
 
 ## 성과 및 향후 계획
 구분	내용
-주요 성과	Three.js 기반으로 TWEEN을 활용한 복잡한 상태 관리 및 CANNON을 활용한 역동적인 물리 시뮬레이션을 구현하여, 단순 뷰어를 넘어서는 기능 확장성을 직접 경험.
-배운 점	Raycasting, IBL, 톤 매핑 등 컴퓨터 그래픽스 기본 원리 실습, 라이브러리별 역할 이해, 3D 데이터 형식의 중요성 인지.
-향후 계획	Shader 기반 시각 효과 (발광 효과 등) 구현, 복잡한 시퀀스를 관리하는 인터랙티브 스토리텔링 타임라인 도입, WebXR/AR 기능 통합을 통한 실감나는 경험 제공.
+- 주요 성과:	Three.js 기반으로 TWEEN을 활용한 복잡한 상태 관리 및 CANNON을 활용한 역동적인 물리 시뮬레이션을 구현하여, 단순 뷰어를 넘어서는 기능 확장성을 직접 경험.
+- 배운 점:	Raycasting, IBL, 톤 매핑 등 컴퓨터 그래픽스 기본 원리 실습, 라이브러리별 역할 이해, 3D 데이터 형식의 중요성 인지.
+- 향후 계획:	Shader 기반 시각 효과 (발광 효과 등) 구현 복잡한 시퀀스를 관리하는 인터랙티브 스토리텔링 타임라인 도입, WebXR/AR 기능 통합을 통한 실감나는 경험 제공.
 
 ## 프로젝트 확장 
 https://github.com/2025-DSWU-CS-FP
