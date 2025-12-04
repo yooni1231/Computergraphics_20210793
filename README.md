@@ -25,18 +25,7 @@
 전시 모드 (Exhibition)	제품의 외부 환경 반사 확인	EXRLoader를 사용한 HDRI 기반 IBL 환경 구현, 톤 매핑 Exposure 조절
 
 ## 파일 구조 및 개발 과정
-## 파일 구조
-project-root/
-├── public/
-│   ├── index.html          # 메인 HTML 파일 (캔버스 및 UI 정의)
-│   ├── js/
-│   │   ├── main.js         # 메인 3D 씬 구성, 렌더링 루프, 모드 전환 로직
-│   │   └── loaders.js      # 모델 및 텍스처 로딩 관리
-│   └── models/
-│       ├── art_studio.exr  # HDRI 환경 맵 (전시 모드 배경 및 IBL)
-│       ├── frame.stl, camera.stl, jetsonnano.stl # 개별 부품 STL 파일
-│       └── glasses_total.obj # 통합 모델
-└── package.json            # 프로젝트 메타데이터 및 의존성 정의
+
 ## 주요 트러블 슈팅 (Trouble Shooting)
 문제	해결	배운 점
 개별 애니메이션 불가 (STL/OBJ)	부품별 개별 STL 파일로 분할 로드하여 물리적 좌표를 계산해 애니메이션에 활용.	glTF/FBX와 같은 계층 구조 포맷의 필요성 인지.
