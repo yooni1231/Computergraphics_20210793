@@ -12,6 +12,7 @@
 
 ## 전시 모드 페이지
 <img width="2209" height="1358" alt="image" src="https://github.com/user-attachments/assets/950463fc-9ea5-4f10-af3a-4953154d82f0" />
+
 ## 강조 모드 페이지 
 <img width="1269" height="1369" alt="image" src="https://github.com/user-attachments/assets/6a41a234-dcae-4e3a-8118-3c6d1bf2481e" />
 
