@@ -4,19 +4,94 @@
     <meta charset="UTF-8">
     <title>미술관 3D 프로젝트</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* -------------------------------------------
+        CSS 스타일 정의
+        ------------------------------------------- */
+        
+        /* 기본 정보 박스 (main.js에서 내용 변경/표시 토글) */
+        #info-box {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: sans-serif;
+            z-index: 10;
+        }
+        
+        /* 부품 클릭 설명 패널 (disassembleMode.js에서 사용) */
+        #info-panel { 
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            padding: 15px;
+            width: 240px;
+            
+            /*  요청하신 대로 색상 및 스타일 조정 */
+            background: #f7e6d1; /* 부드러운 베이지색 배경 */
+            color: #333333; /* 검은색 계열 텍스트 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* 그림자 강화 */
+            
+            border-radius: 12px;
+            font-family: sans-serif;
+            z-index: 10;
+            display: none; /* JS를 통해 표시됨 */
+        }
+        
+        #info-panel h3, #info-panel p {
+            margin: 0;
+        }
+        
+        /* 모드 버튼 스타일 */
+        #mode-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+        #mode-buttons button {
+            padding: 8px 15px;
+            margin-left: 5px;
+            border: none;
+            background-color: #333;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #mode-buttons button:hover {
+            background-color: #555;
+        }
+        
+        /* 캔버스 스타일 */
+        canvas {
+            display: block;
+        }
+        
+        /* 3D 라벨 스타일 (disassembleMode.js에서 사용) */
+        .disassemble-label {
+            font-family: sans-serif;
+            color: #333;
+            white-space: nowrap;
+            transform: translate(-50%, -50%); 
+            pointer-events: none; 
+            z-index: 5;
+        }
+    </style>
 </head>
 
 <body>
-    <!-- 3D 렌더링 영역 -->
     <canvas id="webgl-canvas"></canvas>
 
-    <!-- 부품 정보 패널 -->
     <div id="info-box">
         <h3>안경 부품</h3>
         <p id="info-text">마우스로 드래그해서 회전해보세요!</p>
     </div>
 
-    <!-- 모드 전환 버튼 UI -->
+    <div id="info-panel" style="display: none;"></div> 
+
     <div id="mode-buttons">
         <button data-mode="exhibition">🏛️ 전시 모드</button>
         <button data-mode="assemble">🧩 조립 모드</button>
@@ -25,21 +100,22 @@
         <button data-mode="highlight">💡 강조 모드</button>
     </div>
 
-    <!-- JS 로드 -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.min.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/OBJLoader.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/controls/OrbitControls.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/EXRLoader.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/cannon@0.6.2/build/cannon.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/STLLoader.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/EXRLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/examples/js/loaders/STLLoader.js"></script>
 
-<script src="/modules/exhibitionMode.js"></script>
-<script src="/modules/assembleMode.js"></script>
-<script src="/modules/disassembleMode.js"></script>
-<script src="/modules/arMode.js"></script>
-<script src="/modules/highlightMode.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cannon@0.6.2/build/cannon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.6.4/dist/tween.umd.js"></script>
 
-<script src="js/main.js"></script>
+    <script src="/modules/exhibitionMode.js"></script>
+    <script src="/modules/assembleMode.js"></script>
+    <script src="/modules/disassembleMode.js"></script>
+    <script src="/modules/arMode.js"></script>
+    <script src="/modules/highlightMode.js"></script>
+
+    <script src="js/main.js"></script>
 
 </body>
 </html>

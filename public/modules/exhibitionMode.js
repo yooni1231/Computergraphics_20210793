@@ -7,7 +7,7 @@ window.enableExhibitionMode = function (scene, renderer) {
     loader.load(
         "/models/art_studio.exr",
         (texture) => {
-            console.log("✅ EXR 파일 로드 완료");
+            console.log(" EXR 파일 로드 완료");
 
             // 환경맵
             texture.mapping = THREE.EquirectangularReflectionMapping;
